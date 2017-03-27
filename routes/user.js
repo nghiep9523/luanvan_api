@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var driver = require('../models/driver');
+var user = require('../models/user');
 
 router.post('/login', function(req, res) {
-  	driver.login(req.body, res);
+  	user.login(req.body, res);
 });
 
 router.post('/register', function(req, res) {
- 	driver.register(req.body, res);
+ 	user.register(req.body, res);
 });
 
 module.exports = router;

@@ -4,7 +4,7 @@ var server = require('../server_config');
 
 const saltRounds = 10;
 
-function Driver() {
+function User() {
 	this.login = function(payload, res) {
 		sql.connect(server.config, function (err) {
 			const request = new sql.Request();
@@ -12,14 +12,14 @@ function Driver() {
 			var inputPassword = payload.password;
 			var storedPassword = null;
 
-			request.input('driverUsername', sql.NVarChar, username);
+			request.input('username', sql.NVarChar, username);
 
-			request.execute('uspLoginDriver', (err, recordsets, returnValue, affected) => {
+			request.execute('uspLoginPassenger', (err, recordsets, returnValue, affected) => {
 				if (!err) {
 				    if (!recordsets[0][0]) {
 				    	res.status(400).send("Username doesn't exist!!");
 				    } else {
-				    	storedPassword = recordsets[0][0].driverPassword;
+				    	storedPassword = recordsets[0][0].password;
 				    	if (bcrypt.compareSync(inputPassword, storedPassword)) {
 				    		res.sendStatus(200);
 				    	} else {
@@ -43,18 +43,18 @@ function Driver() {
 			var phone = payload.phone;
 			var currentDate = new Date();
 			var salt = bcrypt.genSaltSync(saltRounds);
-			var driverID = bcrypt.hashSync(username, salt);
+			var userID = bcrypt.hashSync(username, salt);
 			var password = bcrypt.hashSync(password, salt);
 
-			request.input('driverID', sql.NVarChar, driverID);
-			request.input('driverUsername', sql.NVarChar, username);
-			request.input('driverPassword', sql.NVarChar, password);
-			request.input('driverEmail', sql.NVarChar, email);
-			request.input('driverFullname', sql.NVarChar, fullname);
-			request.input('driverPhone', sql.NVarChar, phone);
+			request.input('userID', sql.NVarChar, userID);
+			request.input('username', sql.NVarChar, username);
+			request.input('password', sql.NVarChar, password);
+			request.input('email', sql.NVarChar, email);
+			request.input('fullname', sql.NVarChar, fullname);
+			request.input('phone', sql.NVarChar, phone);
 			request.input('createdDate', sql.DateTime, currentDate);
 
-			request.execute('uspRegisterDriver', (err, result) => {
+			request.execute('uspRegisteruser', (err, result) => {
 			    if(!err) {
 			    	res.sendStatus(200);
 			    } else {
@@ -69,4 +69,4 @@ function Driver() {
 	}
 }
 
-module.exports = new Driver();
+module.exports = new User();
