@@ -17,17 +17,17 @@ function Driver() {
 			request.execute('uspLoginDriver', (err, recordsets, returnValue, affected) => {
 				if (!err) {
 				    if (!recordsets[0][0]) {
-				    	res.status(400).send("Username doesn't exist!!");
+				    	res.status(400).send({status: 400, message:"Username doesn't exist!!"});
 				    } else {
 				    	storedPassword = recordsets[0][0].driverPassword;
 				    	if (bcrypt.compareSync(inputPassword, storedPassword)) {
-				    		res.sendStatus(200);
+				    		res.status(200).send({status: 200});
 				    	} else {
-				    	res.status(400).send("Wrong Password!!");
+				    		res.status(400).send({status: 400, message: "Wrong Password!!"});
 				    	}
 				    }
 				} else {
-					res.status(400).send(err);
+					res.status(400).send({status: 400, message: "Something happened, please try again"});
 				}
 			});
 		});
