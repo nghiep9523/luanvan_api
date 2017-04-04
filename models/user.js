@@ -11,6 +11,7 @@ function User() {
 			var username = payload.username;
 			var inputPassword = payload.password;
 			var storedPassword = null;
+			var data = null;
 
 			request.input('username', sql.NVarChar, username);
 
@@ -20,10 +21,12 @@ function User() {
 				    	res.status(400).send({status: 400, message:"Username doesn't exist!!"});
 				    } else {
 				    	storedPassword = recordsets[0][0].password;
+				    	data = recordsets[0][0];
+				    	delete data['password'];
 				    	if (bcrypt.compareSync(inputPassword, storedPassword)) {
-				    		res.status(200).send({status: 200});
+				    		res.status(200).send({status: 200, payload: data});
 				    	} else {
-				    		res.status(400).send({status: 400, message: "Wrong Password"});
+				    		res.status(400).send({status: 400, message: "Wrong Password!!"});
 				    	}
 				    }
 				} else {

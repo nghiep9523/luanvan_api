@@ -10,4 +10,7 @@ router.post('/register', function(req, res) {
  	driver.register(req.body, res);
 });
 
+router.get('/coordInfo', function(req, res) {
+ 	driver.getCoordInfo(res);
+});
 module.exports = router;
