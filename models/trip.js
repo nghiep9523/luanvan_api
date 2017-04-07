@@ -16,10 +16,10 @@ function Trip() {
 			request.input('driverID', sql.NVarChar, payload.driverID);
 			request.input('tripFrom', sql.NVarChar, payload.tripFrom);
 			request.input('tripTo', sql.NVarChar, payload.tripTo);
-			request.input('fromLong', sql.Int, fromLong);
-			request.input('fromLat', sql.Int, fromLat);
-			request.input('toLong', sql.Int, toLong);
-			request.input('toLat', sql.Int, toLat);
+			request.input('fromLong', sql.Decimal(9, 6), fromLong);
+			request.input('fromLat', sql.Decimal(9, 6), fromLat);
+			request.input('toLong', sql.Decimal(9, 6), toLong);
+			request.input('toLat', sql.Decimal(9, 6), toLat);
 			request.input('createdDate', sql.DateTime, currentDate);
 
 			request.execute('uspCreateTrip', (err, recordsets, returnValue, affected) => {
