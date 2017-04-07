@@ -6,4 +6,7 @@ router.post('/create', function(req, res) {
   	trip.create(req.body, res);
 });
 
+router.post('/getTrip', function(req, res) {
+  	trip.getTripInfo(req.body, res);
+});
 module.exports = router;
