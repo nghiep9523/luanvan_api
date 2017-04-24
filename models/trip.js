@@ -1,5 +1,6 @@
 var sql = require('mssql');
 var server = require('../server_config');
+var amqp = require('amqplib/callback_api');
 
 function Trip() {
 	this.create = function(payload, res) {
@@ -24,6 +25,20 @@ function Trip() {
 
 			request.execute('uspCreateTrip', (err, recordsets, returnValue, affected) => {
 				if(!err) {
+					console.log(server.amqpURL);
+					amqp.connect(server.amqpURL , function(err, conn) {
+						conn.createChannel(function(err, ch) {
+							var ex = 'trip_logs';
+							var id = payload.driverID;
+							var msg = recordsets[0];
+
+							console.log(msg);
+
+							ch.assertExchange(ex, 'direct', {durable: false});
+							ch.publish(ex, id, new Buffer(JSON.stringify(msg)));
+						});
+						setTimeout(function() { conn.close(); }, 500);
+					});
 			    	res.sendStatus(200);
 			    } else {
 			    	if (err.number == 2627) {

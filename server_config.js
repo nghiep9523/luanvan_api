@@ -8,6 +8,7 @@ function ServerConfig() {
 	    password: 'x6FyKB84fFVptdggFftH36rVjzxj27yD3um4bxLrhuyF7EttjTLoHynAMSpkdXch',
 	    port: 1433
 	};
+	this.amqpURL = 'amqp://imtqjgzz:LQWyhmVxKBMgV6ROObew36G07DUs6ZYZ@white-mynah-bird.rmq.cloudamqp.com/imtqjgzz';
 }
 
 module.exports = new ServerConfig();
