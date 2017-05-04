@@ -1,6 +1,7 @@
 var sql = require('mssql');
 var bcrypt = require('bcrypt');
 var server = require('../server_config');
+var amqp = require('amqplib/callback_api');
 
 const saltRounds = 10;
 
@@ -82,6 +83,73 @@ function Driver() {
 			    	res.status(200).send({status: 200, payload: payload});
 			    } else {
 			    	res.status(400).send({status: 400, message: err});
+			    }			    
+			});
+		});
+	}
+
+	this.updateDriverCoord = function(payload, res) {
+		sql.connect(server.config, function (err) {
+			var request = new sql.Request();
+			var payload = null;
+			
+			request.execute('getDriversCoorInfo', (err, result) => {
+			    if(!err) {
+			    	payload = result[0];
+			    	res.status(200).send({status: 200, payload: payload});
+			    } else {
+			    	res.status(400).send({status: 400, message: err});
+			    }			    
+			});
+		});
+	}
+
+	this.receiveLocationLogs = function() {
+		amqp.connect(server.amqpURL, function(err, conn) {
+		  	conn.createChannel(function(err, ch) {
+			    var ex = 'location_logs';
+
+			    ch.assertExchange(ex, 'direct', {durable: false});
+
+			    ch.assertQueue('', {exclusive: true}, function(err, q) {
+
+				    ch.bindQueue(q.queue, ex, 'location');
+
+				    ch.consume(q.queue, function(msg) {
+				        var message = JSON.parse(msg.content.toString());
+				        sql.connect(server.config, function (err) {
+							var request = new sql.Request();
+							var payload = message;
+
+							console.log(payload);
+
+							request.input('long', sql.Decimal(9, 6), payload.longitude);
+							request.input('lat', sql.Decimal(9, 6), payload.latitude);
+							request.input('id', sql.NVarChar, payload.driverID);
+							
+							request.execute('uspUpdateDriverCoord', (err, result) => {
+							    if(err) {
+							    	console.log(err);
+							    }			    
+							});
+						});
+				    }, {noAck: true});
+			   	});
+		  	});
+		});
+	}
+
+	this.updateDriverStatus = function(payload, res) {
+		sql.connect(server.config, function (err) {
+			var request = new sql.Request();
+
+			request.input('driverID', sql.NVarChar, payload.driverID);
+			
+			request.execute('uspUpdateDriverStatus', (err, result) => {
+			    if(!err) {
+			    	res.sendStatus(200);
+			    } else {
+			    	res.sendStatus(400);
 			    }			    
 			});
 		});

@@ -13,4 +13,8 @@ router.post('/register', function(req, res) {
 router.get('/coordInfo', function(req, res) {
  	driver.getCoordInfo(res);
 });
+
+router.post('/updateStatus', function(req, res) {
+ 	driver.updateDriverStatus(req.body, res);
+});
 module.exports = router;
