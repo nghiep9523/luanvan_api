@@ -147,7 +147,7 @@ function Driver() {
 			
 			request.execute('uspUpdateDriverStatus', (err, result) => {
 			    if(!err) {
-			    	res.sendStatus(200);
+			    	res.status(200).send({status: 200});
 			    } else {
 			    	res.sendStatus(400);
 			    }			    
