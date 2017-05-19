@@ -5,7 +5,6 @@
  */
 
 var app = require('../app');
-var driverModel = require('../models/driver');
 var debug = require('debug')('app_luanvan_api:server');
 var http = require('http');
 
@@ -88,5 +87,4 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  driverModel.receiveLocationLogs();
 }

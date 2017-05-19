@@ -9,6 +9,10 @@ function ServerConfig() {
 	    port: 1433
 	};
 	this.amqpURL = 'amqp://imtqjgzz:LQWyhmVxKBMgV6ROObew36G07DUs6ZYZ@white-mynah-bird.rmq.cloudamqp.com/imtqjgzz';
+	this.secret = 'appluanvan';
+	this.customerAPI = 'https://appluanvan-customer-service.herokuapp.com/';
+	this.driverAPI = 'https://appluanvan-driver-service.herokuapp.com/';
+	this.tripAPI = 'https://appluanvan-trip-service.herokuapp.com/';
 }
 
 module.exports = new ServerConfig();
