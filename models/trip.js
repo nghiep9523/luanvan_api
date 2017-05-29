@@ -39,7 +39,6 @@ function Trip() {
         	customerData = data.payload;
 			if (data.status == 200) {
 				client.post(server.driverAPI + 'info', argd, function(data, response) {
-					console.log(data);
 					if (data.status == 200) {
 						client.post(apiURL + 'create', argt, function (data, response) {
 							if (data.status == 200) {
@@ -77,20 +76,21 @@ function Trip() {
 		var client = new Client();
 		var tripData = null;
 		var customerData = null;
-		argt = {
+		var argt = {
 		    data: { driverID: payload.driverID },
 		    headers: { "Content-Type": "application/x-www-form-urlencoded" }			
 		};
-		argc = {
-			data: { userID: "" },
+		var argc = {
+			data: { userID: '' },
 		    headers: { "Content-Type": "application/x-www-form-urlencoded" }
 		}
 
 		client.post(apiURL+'getTrip', argt, function (data, response) {
 		   if (data.status == 200) {
 		        tripData = data.payload;
-		        client.post(apiURL + "info", argc, function (data, response) {
+		        client.post(server.customerAPI + "info", argc, function (data, response) {
 		        	customerData = data.payload;
+		        	console.log(data);
 		        	for (var i = 0; i < tripData.length; i++) {
 		        		var pos = customerData.map(function(e) { return e.userID; }).indexOf(tripData[i].userID);
 		        		tripData[i]['userFullname'] = customerData[pos].userFullname;
