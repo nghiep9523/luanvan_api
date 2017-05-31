@@ -103,6 +103,69 @@ function Trip() {
 			}
 		});
 	}
+
+	this.getTripInfo = function(payload, res) {
+		var client = new Client();
+		if (payload.driverID) {
+			var tripData = null;
+			var customerData = null;
+			var argt = {
+			    data: { driverID: payload.driverID },
+			    headers: { "Content-Type": "application/x-www-form-urlencoded" }			
+			};
+			var argc = {
+				data: { userID: '' },
+			    headers: { "Content-Type": "application/x-www-form-urlencoded" }
+			}
+
+			client.post(apiURL+'getTrip', argt, function (data, response) {
+			   if (data.status == 200) {
+			        tripData = data.payload;
+			        client.post(server.customerAPI + "info", argc, function (data, response) {
+			        	customerData = data.payload;
+			        	for (var i = 0; i < tripData.length; i++) {
+			        		var pos = customerData.map(function(e) { return e.userID; }).indexOf(tripData[i].userID);
+			        		tripData[i]['userFullname'] = customerData[pos].userFullname;
+			        		tripData[i]['phone'] = customerData[pos].phone;
+			        	}
+			        	res.status(200).send({status: 200, payload: tripData});
+			        });
+				} else {
+					res.status(400).send({status: 400, message: data.message});
+				}
+			});
+		} else if (payload.userID) {
+			var tripData = null;
+			var driverData = null;
+			var argt = {
+			    data: { userID: payload.userID },
+			    headers: { "Content-Type": "application/x-www-form-urlencoded" }			
+			};
+			var argc = {
+				data: { driverID: '' },
+			    headers: { "Content-Type": "application/x-www-form-urlencoded" }
+			}
+
+			client.post(apiURL+'getTrip', argt, function (data, response) {
+			   if (data.status == 200) {
+			        tripData = data.payload;
+			        client.post(server.driverAPI + "info", argc, function (data, response) {
+			        	driverData = data.payload;
+			        	for (var i = 0; i < tripData.length; i++) {
+			        		var pos = driverData.map(function(e) { return e.driverID; }).indexOf(tripData[i].driverID);
+			        		tripData[i]['driverFullname'] = driverData[pos].userFullname;
+			        		tripData[i]['driverPhone'] = driverData[pos].phone;
+			        	}
+			        	res.status(200).send({status: 200, payload: tripData});
+			        });
+				} else {
+					res.status(400).send({status: 400, message: data.message});
+				}
+			});
+		} else {
+			res.status(400).send({status: 400});
+		}
+	}
 }
 
 module.exports = new Trip();
