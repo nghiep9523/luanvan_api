@@ -151,10 +151,12 @@ function Trip() {
 			        tripData = data.payload;
 			        client.post(server.driverAPI + "info", argc, function (data, response) {
 			        	driverData = data.payload;
+			        	console.log("aaaaa", driverData)
 			        	for (var i = 0; i < tripData.length; i++) {
 			        		var pos = driverData.map(function(e) { return e.driverID; }).indexOf(tripData[i].driverID);
-			        		tripData[i]['driverFullname'] = driverData[pos].userFullname;
-			        		tripData[i]['driverPhone'] = driverData[pos].phone;
+			        		tripData[i]['driverFullname'] = driverData[pos].driverFullname;
+			        		tripData[i]['driverPhone'] = driverData[pos].driverPhone;
+			        		console.log(tripData);
 			        	}
 			        	res.status(200).send({status: 200, payload: tripData});
 			        });
