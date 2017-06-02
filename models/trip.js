@@ -19,7 +19,8 @@ function Trip() {
 		     	fromLong: payload.fromLong,
 		     	fromLat: payload.fromLat,
 		     	toLong: payload.toLong,
-		     	toLat: payload.toLat
+		     	toLat: payload.toLat,
+		     	price: payload.price
 		 	},
 		    headers: { "Content-Type": "application/x-www-form-urlencoded" }
 		};
