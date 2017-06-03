@@ -9,6 +9,7 @@ function Trip() {
 		var client = new Client();
 		var tripData = null;
 		var customerData = null;
+		var driverData = null;
 
 		var argt = {
 		    data: { 
@@ -40,17 +41,18 @@ function Trip() {
         	customerData = data.payload;
 			if (data.status == 200) {
 				client.post(server.driverAPI + 'info', argd, function(data, response) {
+					driverData = data.payload;
 					if (data.status == 200) {
 						client.post(apiURL + 'create', argt, function (data, response) {
 							if (data.status == 200) {
 								tripData = data.payload;
 								var resData = tripData;
-								resData['username'] = customerData.userFullname;
-								resData['userPhone'] = customerData.phone;
+								resData['driverFullname'] = driverData.driverFullname;
+								resData['driverPhone'] = driverData.driverPhone;
 								amqp.connect(server.amqpURL , function(err, conn) {
 									conn.createChannel(function(err, ch) {
-										var ex = 'trip_logs';
-										var id = payload.driverID;
+										var ex = 'notification_logs';
+										var id = customerData.userID;
 										var msg = resData;
 
 										ch.assertExchange(ex, 'direct', {durable: false});
