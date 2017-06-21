@@ -92,6 +92,7 @@ function Trip() {
 			client.post(apiURL+'getTrip', argt, function (data, response) {
 			   if (data.status == 200) {
 			        tripData = data.payload;
+			        console.log(data);
 			        client.post(server.customerAPI + "info", argc, function (data, response) {
 			        	customerData = data.payload;
 			        	for (var i = 0; i < tripData.length; i++) {
@@ -122,7 +123,6 @@ function Trip() {
 			        tripData = data.payload;
 			        client.post(server.driverAPI + "info", argc, function (data, response) {
 			        	driverData = data.payload;
-			        	console.log("aaaaa", driverData)
 			        	for (var i = 0; i < tripData.length; i++) {
 			        		var pos = driverData.map(function(e) { return e.driverID; }).indexOf(tripData[i].driverID);
 			        		tripData[i]['driverFullname'] = driverData[pos].driverFullname;
