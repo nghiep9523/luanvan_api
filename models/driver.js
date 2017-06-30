@@ -79,7 +79,7 @@ function Driver() {
 						    headers: { "Content-Type": "application/x-www-form-urlencoded" }
 						};
 
-						console.log(data);
+						console.log(args);
 						 
 						client.post(apiURL + 'updateCoord', args, function (data, response) {
 						    if (data.status == 200) {
