@@ -81,9 +81,9 @@ function Driver() {
 						 
 						client.post(apiURL + 'updateCoord', args, function (data, response) {
 						    if (data.status == 200) {
-						        res.status(200).send({status: 200});
+						        console.log("success");
 							} else {
-								res.status(400).send({status: 400, message: data.message});
+								console.log("failed");
 							}
 						});
 				    }, {noAck: true});
